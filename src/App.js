@@ -45,9 +45,9 @@ function App() {
   dataDisplay();
 
   useEffect(() => {
-    // setInterval(function () {
-    dataExporter();
-    // }, 5000);
+    setInterval(function () {
+      dataExporter();
+    }, 5000);
   }, []);
 
   const numberHandler = (e) => {
