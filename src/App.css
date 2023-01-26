@@ -8,6 +8,14 @@
   display: none;
 }
 
+.reload {
+  border-color: red !important;
+}
+
+.reload:hover {
+  background-color: rgba(255, 0, 0, 0.3) !important;
+}
+
 .form{
   display:flex;
   flex-direction: column;
@@ -16,7 +24,7 @@
   margin: 25px auto;
   background-color: white;
   border: 2px rgb(116, 111, 111) solid;
-  border-radius: 10px;
+  border-radius: 5px;
   width:90%;
 }
 
@@ -47,8 +55,9 @@
 
 .button_container{
   display:flex;
-  flex-direction: column;
-  justify-content: center;
+  margin-top: 50px;
+  flex-direction: row;
+  justify-content: space-around;
   align-items: center;
 }
 

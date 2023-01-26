@@ -5,6 +5,7 @@ function App() {
   const [formData, setData] = useState([]);
   const [mobNumber, setMobNumber] = useState("");
   const [selStud, setSelStud] = useState(0);
+  const [confirmed, setConfirmed] = useState(false);
 
   var url =
     "https://sheets.googleapis.com/v4/spreadsheets/" +
@@ -55,7 +56,18 @@ function App() {
 
   let counter = 1;
   let itemsplit = [];
+  let nextItem;
   let columnsplit = [];
+
+  const invoiceDownloader = (event) => {
+    const file = new Blob([filteredOrders[selStud]], { type: "text/plain" });
+    const element = document.createElement("a");
+    element.href = URL.createObjectURL(file);
+    element.download = `invoice` + `.pdf`;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  };
+
   return (
     <>
       <div>
@@ -82,6 +94,7 @@ function App() {
               <th>Class</th>
               <th>Gender</th>
               <th>Parent's No.</th>
+              <th>Email</th>
               <th>Select Student</th>
             </tr>
             {filteredOrders != 0
@@ -91,6 +104,7 @@ function App() {
                     <td key={index}>{item[3]}</td>
                     <td key={index}>{item[6]}</td>
                     <td key={index}>{item[4]}</td>
+                    <td key={index}>{item[7]}</td>
                     <td>
                       <div className="radio">
                         <input
@@ -121,10 +135,17 @@ function App() {
             {filteredOrders != 0
               ? filteredOrders[selStud].map((item, index, elements) => (
                   <>
-                    {index < 9 ? (
+                    {index <= 9 ? (
                       ""
                     ) : (
                       <>
+                        {
+                          // <span className="useless">
+                          //   {" "}
+                          //   {(nextItem = elements + 1)}
+                          // </span>
+                        }
+
                         {item !== "" ? (
                           <>
                             {
@@ -139,19 +160,22 @@ function App() {
                                 {formData[0][index].includes("Tie") ||
                                 formData[0][index].includes("Belt") ? (
                                   <>
-                                    <td key={index}>{formData[0][index]}</td>
-                                    <td key={index}>-</td>
-                                    <td key={index}>{item}</td>
-                                    <span className="useless">{counter++}</span>
+                                    <tr>
+                                      <td key={index}>{formData[0][index]}</td>
+                                      <td key={index}>-</td>
+                                      <td key={index}>{item}</td>
+                                      <span className="useless">
+                                        {counter++}
+                                      </span>
+                                    </tr>
                                   </>
                                 ) : (
-                                  ""
+                                  <tr>
+                                    <td key={index}>{formData[0][index]}</td>
+                                    <td key={index}>{item}</td>
+                                    <td key={index}>{elements[index + 1]}</td>
+                                  </tr>
                                 )}
-                                <tr>
-                                  <td key={index}>{formData[0][index]}</td>
-                                  <td key={index}>{item}</td>
-                                  <td key={index}>{elements[index + 1]}</td>
-                                </tr>
                               </>
                             ) : (
                               ""
@@ -181,7 +205,32 @@ function App() {
           <p className="total">Total: 4500.00</p>
         </div>
         <div className="button_container">
-          <button className="button confirm">Confirm order</button>
+          {confirmed ? (
+            <button className="button confirm" onClick={invoiceDownloader()}>
+              Download Invoice
+            </button>
+          ) : (
+            <button
+              className="button confirm"
+              onClick={() => {
+                let p = prompt("Are you sure you want to confirm this order?");
+                console.log(p + confirmed);
+                if (p.localeCompare("y") || p.localeCompare("yes"))
+                  setConfirmed(!confirmed);
+              }}
+            >
+              Confirm order
+            </button>
+          )}
+
+          <button
+            className="button confirm reload"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Reload Page
+          </button>
         </div>
       </div>
     </>
