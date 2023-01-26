@@ -4,6 +4,7 @@ import "./App.css";
 function App() {
   const [formData, setData] = useState([]);
   const [mobNumber, setMobNumber] = useState("");
+  const [selStud, setSelStud] = useState(0);
 
   var url =
     "https://sheets.googleapis.com/v4/spreadsheets/" +
@@ -23,30 +24,24 @@ function App() {
     return dataFetcher().then((res) => setData(res["values"]));
   }
 
-  // function stateExporter(x) {
-  //   setData(x["values"]);
-  // }
-
   let orderArr = [];
 
   for (let i = 1; i < formData.length; i++) {
-    // console.log(i + "\t" + formData[i]);
     let orderDetails = String(formData[i]).split(",");
-    console.log(orderDetails);
     orderArr.push(orderDetails);
-    // if (orders[i][4] === mobNumber) {
-    //   console.log(orders[i]);
-    // }
   }
+
+  let filteredOrders = [];
 
   function dataDisplay() {
     for (let i = 0; i < orderArr.length; i++) {
       if (mobNumber === orderArr[i][4]) {
-        // console.log(orderArr[i]);
-        return <p>{orderArr[i]}</p>;
+        filteredOrders.push(orderArr[i]);
       }
     }
   }
+
+  dataDisplay();
 
   useEffect(() => {
     // setInterval(function () {
@@ -58,99 +53,138 @@ function App() {
     setMobNumber(e.target.value);
   };
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-  };
-
+  let counter = 1;
+  let itemsplit = [];
+  let columnsplit = [];
   return (
-    <div>
+    <>
       <div>
-        {/* {oD.map((item, index) => (
-          <p key={index}>{item}</p>
-        ))} */}
-        {dataDisplay}
-        <form class="form" onSubmit={submitHandler}>
-          <label class="form_item" for="ph">
-            Enter Parent's Number
-          </label>
-          <br />
-          <input
-            class="form_item text"
-            type="text"
-            id="ph"
-            name="ph"
-            onChange={numberHandler}
-          />
-          <br />
-          <button type="submit" class="form_item button search">
-            Search
-          </button>
-        </form>
-      </div>
-      <div>
-        <table class="table">
-          <tr>
-            <th>Student Name</th>
-            <th>Class</th>
-            <th>Gender</th>
-            <th>Parent's No.</th>
-            <th>Select Student</th>
-          </tr>
-          <tr>
-            <td>Rishit</td>
-            <td>8</td>
-            <td>Male</td>
-            <td>9844025859</td>
-            <td>
-              <div class="radio">
-                <input type="radio" name="select student" />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Anu</td>
-            <td>4</td>
-            <td>Female</td>
-            <td>9844025859</td>
-            <td>
-              <div class="radio">
-                <input type="radio" name="select student" />
-              </div>
-            </td>
-          </tr>
-        </table>
-        <div class="button_container">
-          <button class="button select_student">Select Student</button>
+        <div>
+          <div className="form">
+            <label className="form_item" htmlFor="ph">
+              Enter Parent's Number
+            </label>
+            <br />
+            <input
+              className="form_item text"
+              type="text"
+              id="ph"
+              name="ph"
+              onChange={numberHandler}
+            />
+            <br />
+          </div>
+        </div>
+        <div>
+          <table className="table student_details" id="student_details">
+            <tr>
+              <th>Student Name</th>
+              <th>Class</th>
+              <th>Gender</th>
+              <th>Parent's No.</th>
+              <th>Select Student</th>
+            </tr>
+            {filteredOrders != 0
+              ? filteredOrders.map((item, index) => (
+                  <tr>
+                    <td key={index}>{item[1]}</td>
+                    <td key={index}>{item[3]}</td>
+                    <td key={index}>{item[6]}</td>
+                    <td key={index}>{item[4]}</td>
+                    <td>
+                      <div className="radio">
+                        <input
+                          type="radio"
+                          name="select student"
+                          onChange={() => setSelStud(index)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              : ""}
+          </table>
+          {/* <div className="button_container">
+          <button className="button select_student">Select Student</button>
+        </div> */}
+        </div>
+
+        <div>
+          <table className="table order_details" id="order_details">
+            <tr>
+              <th>Item</th>
+              <th>Size</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+
+            {filteredOrders != 0
+              ? filteredOrders[selStud].map((item, index, elements) => (
+                  <>
+                    {index < 9 ? (
+                      ""
+                    ) : (
+                      <>
+                        {item !== "" ? (
+                          <>
+                            {
+                              <span className="useless">
+                                {(columnsplit = formData[0][index].split(" "))}
+                                {(itemsplit = item.split(" "))}
+                                {console.log(columnsplit)}
+                              </span>
+                            }
+                            {counter % 2 !== 0 ? (
+                              <>
+                                {formData[0][index].includes("Tie") ||
+                                formData[0][index].includes("Belt") ? (
+                                  <>
+                                    <td key={index}>{formData[0][index]}</td>
+                                    <td key={index}>-</td>
+                                    <td key={index}>{item}</td>
+                                    <span className="useless">{counter++}</span>
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                                <tr>
+                                  <td key={index}>{formData[0][index]}</td>
+                                  <td key={index}>{item}</td>
+                                  <td key={index}>{elements[index + 1]}</td>
+                                </tr>
+                              </>
+                            ) : (
+                              ""
+                            )}
+                            {/* {
+                              <tr>
+                                {}
+                                <td key={index}>{formData[0][index]}</td>
+                                <td key={index}>{item}</td>
+                                <td key={index}>{elements[index + 1]}</td>
+                                {console.log(item)}
+                              </tr>
+                            } */}
+                            {<span className="useless">{counter++}</span>}
+                          </>
+                        ) : (
+                          ""
+                        )}
+                        {/* <td key={index}>{formData[0][index]}</td> */}
+                        {/* <p>{item}</p> */}
+                      </>
+                    )}
+                  </>
+                ))
+              : ""}
+          </table>
+          <p className="total">Total: 4500.00</p>
+        </div>
+        <div className="button_container">
+          <button className="button confirm">Confirm order</button>
         </div>
       </div>
-
-      <div>
-        <table class="table">
-          <tr>
-            <th>Item</th>
-            <th>Size</th>
-            <th>Quanitity</th>
-            <th>Price</th>
-          </tr>
-          <tr>
-            <td>Shorts</td>
-            <td>L</td>
-            <td>2</td>
-            <td>400</td>
-          </tr>
-          <tr>
-            <td>T shirts</td>
-            <td>XL</td>
-            <td>2</td>
-            <td>400</td>
-          </tr>
-        </table>
-        <p class="total">Total: 4500.00</p>
-      </div>
-      <div class="button_container">
-        <button class="button confirm">Confirm order</button>
-      </div>
-    </div>
+    </>
   );
 }
 
