@@ -152,7 +152,6 @@ function App() {
                               <span className="useless">
                                 {(columnsplit = formData[0][index].split(" "))}
                                 {(itemsplit = item.split(" "))}
-                                {console.log(columnsplit)}
                               </span>
                             }
                             {counter % 2 !== 0 ? (
@@ -214,7 +213,6 @@ function App() {
               className="button confirm"
               onClick={() => {
                 let p = prompt("Are you sure you want to confirm this order?");
-                console.log(p + confirmed);
                 if (p.localeCompare("y") || p.localeCompare("yes"))
                   setConfirmed(!confirmed);
               }}
