@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import { jsPDF } from "jspdf";
 
 function App() {
   const [formData, setData] = useState([]);
@@ -59,13 +60,21 @@ function App() {
   let nextItem;
   let columnsplit = [];
 
-  const invoiceDownloader = (event) => {
-    const file = new Blob([filteredOrders[selStud]], { type: "text/plain" });
-    const element = document.createElement("a");
-    element.href = URL.createObjectURL(file);
-    element.download = `invoice` + `.pdf`;
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
+  // const invoiceDownloader = (event) => {
+  //   const file = new Blob([filteredOrders[selStud]], { type: "text/plain" });
+  //   const element = document.createElement("a");
+  //   element.href = URL.createObjectURL(file);
+  //   element.download = `invoice` + `.pdf`;
+  //   document.body.appendChild(element); // Required for this to work in FireFox
+  //   element.click();
+  // };
+
+  const invoiceDownloader = () => {
+    const element = document.getElementById("container_content");
+    const doc = new jsPDF();
+    let headers = ["Item", "Size", "Quantity", "Price"];
+    doc.table(25, 50, element.innerText, headers, { autoSize: true });
+    doc.save(`${mobNumber}.pdf`);
   };
 
   return (
