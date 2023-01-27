@@ -45,9 +45,9 @@ function App() {
   dataDisplay();
 
   useEffect(() => {
-    setInterval(function () {
-      dataExporter();
-    }, 5000);
+    // setInterval(function () {
+    dataExporter();
+    // }, 5000);
   }, []);
 
   const numberHandler = (e) => {
@@ -97,6 +97,7 @@ function App() {
               <th>Email</th>
               <th>Select Student</th>
             </tr>
+            {/* Select the order you want to confirm */}
             {filteredOrders != 0
               ? filteredOrders.map((item, index) => (
                   <tr>
@@ -118,12 +119,10 @@ function App() {
                 ))
               : ""}
           </table>
-          {/* <div className="button_container">
-          <button className="button select_student">Select Student</button>
-        </div> */}
         </div>
 
         <div>
+          {/* Display Order Details */}
           <table className="table order_details" id="order_details">
             <tr>
               <th>Item</th>
@@ -163,16 +162,216 @@ function App() {
                                       <td key={index}>{formData[0][index]}</td>
                                       <td key={index}>-</td>
                                       <td key={index}>{item}</td>
+                                      {/* Tie Long Price for M14 and */}
+                                      {formData[0][index].includes("Tie") &&
+                                      formData[0][index].includes("S512") ? (
+                                        <td key={index}>{item * 150}</td>
+                                      ) : (
+                                        <>
+                                          {formData[0][index].includes("Tie") &&
+                                          formData[0][index].includes("M14") ? (
+                                            <td key={index}>{item * 100}</td>
+                                          ) : (
+                                            ""
+                                          )}
+                                        </>
+                                      )}
+
+                                      {/* Tie Knot */}
+                                      {(formData[0][index].includes(
+                                        "Tie Knot"
+                                      ) &&
+                                        formData[0][index].includes("F14")) ||
+                                      (formData[0][index].includes(
+                                        "Tie Knot"
+                                      ) &&
+                                        formData[0][index].includes("M14")) ||
+                                      (formData[0][index].includes(
+                                        "Tie Knot"
+                                      ) &&
+                                        formData[0][index].includes("O14")) ? (
+                                        <td key={index}>{item * 100}</td>
+                                      ) : (
+                                        ""
+                                      )}
+
+                                      {/* Belt Price */}
+                                      {formData[0][index].includes("Belt") ? (
+                                        <td key={index}>{item * 100}</td>
+                                      ) : (
+                                        ""
+                                      )}
                                       <span className="useless">
                                         {counter++}
                                       </span>
                                     </tr>
                                   </>
                                 ) : (
+                                  // For all Other Items
                                   <tr>
                                     <td key={index}>{formData[0][index]}</td>
                                     <td key={index}>{item}</td>
                                     <td key={index}>{elements[index + 1]}</td>
+
+                                    {/* Winter Jacket */}
+                                    {(formData[0][index].includes(
+                                      "Winter Jacket"
+                                    ) &&
+                                      formData[0][index].includes("F14")) ||
+                                    (formData[0][index].includes(
+                                      "Winter Jacket"
+                                    ) &&
+                                      formData[0][index].includes("M14")) ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 550}
+                                      </td>
+                                    ) : (
+                                      <>
+                                        {formData[0][index].includes(
+                                          "Winter Jacket"
+                                        ) &&
+                                        formData[0][index].includes("S512") ? (
+                                          <td key={index}>
+                                            {elements[index + 1] * 650}
+                                          </td>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </>
+                                    )}
+
+                                    {/* Shirts */}
+                                    {(formData[0][index].includes("Shirt") &&
+                                      formData[0][index].includes("F14")) ||
+                                    (formData[0][index].includes("Shirt") &&
+                                      formData[0][index].includes("M14")) ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 490}
+                                      </td>
+                                    ) : (
+                                      <>
+                                        {formData[0][index].includes("Shirt") &&
+                                        formData[0][index].includes("S512") ? (
+                                          <td key={index}>
+                                            {elements[index + 1] * 540}
+                                          </td>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </>
+                                    )}
+
+                                    {/* Trousers */}
+                                    {formData[0][index].includes("Trousers") &&
+                                    formData[0][index].includes("S512") ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 610}
+                                      </td>
+                                    ) : (
+                                      ""
+                                    )}
+
+                                    {/* Track Pants */}
+                                    {(formData[0][index].includes(
+                                      "Track Pants"
+                                    ) &&
+                                      formData[0][index].includes("F14")) ||
+                                    (formData[0][index].includes(
+                                      "Track Pants"
+                                    ) &&
+                                      formData[0][index].includes("M14")) ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 380}
+                                      </td>
+                                    ) : (
+                                      <>
+                                        {formData[0][index].includes(
+                                          "Track Pants"
+                                        ) &&
+                                        formData[0][index].includes("S512") ? (
+                                          <td key={index}>
+                                            {elements[index + 1] * 430}
+                                          </td>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </>
+                                    )}
+
+                                    {/* Track T Shirt */}
+                                    {formData[0][index].includes(
+                                      "Track T-Shirt"
+                                    ) && formData[0][index].includes("F14") ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 360}
+                                      </td>
+                                    ) : (
+                                      <>
+                                        {formData[0][index].includes(
+                                          "Track T-Shirt"
+                                        ) &&
+                                        formData[0][index].includes("S512") ? (
+                                          <td key={index}>
+                                            {elements[index + 1] * 425}
+                                          </td>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </>
+                                    )}
+
+                                    {/* Blazers */}
+                                    {formData[0][index].includes("Blazer") &&
+                                    formData[0][index].includes("S512") ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 1600}
+                                      </td>
+                                    ) : (
+                                      ""
+                                    )}
+
+                                    {/* Shorts */}
+                                    {(formData[0][index].includes("Shorts") &&
+                                      formData[0][index].includes("M14")) ||
+                                    (formData[0][index].includes("Shorts") &&
+                                      formData[0][index].includes("F14")) ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 490}
+                                      </td>
+                                    ) : (
+                                      ""
+                                    )}
+
+                                    {/* Skirts */}
+                                    {formData[0][index].includes("Skirt") &&
+                                    formData[0][index].includes("F14") ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 525}
+                                      </td>
+                                    ) : (
+                                      ""
+                                    )}
+
+                                    {/* Socks */}
+                                    {(formData[0][index].includes("Socks") &&
+                                      formData[0][index].includes("M14")) ||
+                                    (formData[0][index].includes("Socks") &&
+                                      formData[0][index].includes("F14")) ? (
+                                      <td key={index}>
+                                        {elements[index + 1] * 90}
+                                      </td>
+                                    ) : (
+                                      <>
+                                        {formData[0][index].includes("Socks") &&
+                                        formData[0][index].includes("S512") ? (
+                                          <td key={index}>
+                                            {elements[index + 1] * 90}
+                                          </td>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </>
+                                    )}
                                   </tr>
                                 )}
                               </>
@@ -201,7 +400,10 @@ function App() {
                 ))
               : ""}
           </table>
-          <p className="total">Total: 4500.00</p>
+          <div className="total_container">
+            <p className="total">Split Up: </p>
+            <p className="total">Total: 4500.00</p>
+          </div>
         </div>
         <div className="button_container">
           {confirmed ? (

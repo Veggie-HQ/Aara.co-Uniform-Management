@@ -88,8 +88,15 @@ td{
   align-items: center;
 }
 
+.total_container {
+  display:flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .total{
-  margin: 20px auto;
+  margin: 10px auto;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -100,7 +107,7 @@ td{
   width: 180px;
   padding: 10px;
   font-weight: 700;
-  margin-top: 50px;
+  /* margin-top: 50px; */
 }
 
 .App {
