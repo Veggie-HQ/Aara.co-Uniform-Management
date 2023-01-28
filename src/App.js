@@ -299,7 +299,7 @@ function App() {
 
                   <p>Bangalore</p>
                 </div>
-                <div className="right">
+                <div className="right right_bill">
                   <p class="date bold">Invoice Date: {formattedToday}</p>
                 </div>
               </div>
@@ -1156,7 +1156,6 @@ function App() {
                       <p>SGST @2.5%</p>
                       <p>CGST @6%</p>
                       <p>SGST @6%</p>
-                      <p>Total Before Round Off</p>
                       <p>Round Off</p>
                     </div>
                     <div className="right">
@@ -1181,11 +1180,6 @@ function App() {
                         <img src={Re} className="resymbol" alt="rupee" />
                         {gst12Total / 2}
                       </p>
-                      <p>
-                        <img src={Re} className="resymbol" alt="rupee" />
-                        {subtotal + gst5Total + gst12Total}
-                      </p>
-
                       <p>
                         {Math.round(subtotal + gst5Total + gst12Total) -
                           (subtotal + gst5Total + gst12Total)}
