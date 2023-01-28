@@ -202,7 +202,8 @@ function App() {
           <table className="table student_details" id="student_details">
             <tr>
               <th>Student Name</th>
-              <th>Class</th>
+              <th>Current Class</th>
+              <th>Going to Class</th>
               <th>Gender</th>
               <th>Parent's No.</th>
               <th>Email</th>
@@ -213,9 +214,27 @@ function App() {
               ? filteredOrders.map((item, index) => (
                   <tr>
                     <td key={index}>{item[1]}</td>
-                    <td key={index}>{item[3]}</td>
+                    <td>
+                      {item[2] != ""
+                        ? item[2]
+                        : item[8] != ""
+                        ? item[8]
+                        : item[54]}
+                    </td>
+                    <td>
+                      {item[3] != ""
+                        ? item[3]
+                        : item[9] != ""
+                        ? item[9]
+                        : item[55]}
+                    </td>
+                    {/* {item[3] === "" ? "" : <td key={index}>{item[3]}</td>}
+                    {item[9] === "" ? "" : <td key={index}>{item[9]}</td>}
+                    {item[55] === "" ? "" : <td key={index}>{item[55]}</td>} */}
                     <td key={index}>{item[6]}</td>
-                    <td key={index}>{item[4]}</td>
+                    <td key={index}>
+                      {item[4] === item[5] ? item[5] : "Number Mismatch"}
+                    </td>
                     <td key={index}>{item[7]}</td>
                     <td>
                       <div className="radio">
@@ -253,7 +272,7 @@ function App() {
                         <span className="useless">
                           {item > 9 && item !== "" ? len++ : ""}
                         </span>
-                        {index <= 9 ? (
+                        {index <= 9 || index === 54 || index === 55 ? (
                           ""
                         ) : (
                           <>
@@ -281,7 +300,7 @@ function App() {
                                           <td key={index}>-</td>
                                           <td key={index}>{item}</td>
 
-                                          {/* Tie Long Price for S14 and S512*/}
+                                          {/* Tie Long Price for S14 and S512 ✅*/}
                                           {formData[0][index].includes("Tie") &&
                                           formData[0][index].includes(
                                             "S512"
@@ -296,9 +315,11 @@ function App() {
                                               <p className="useless">
                                                 {
                                                   (gst5Total +=
-                                                    0.05 * prices.TieS512)
+                                                    0.05 *
+                                                    (item * prices.TieS512))
                                                 }
                                               </p>
+
                                               <p className="useless">
                                                 {
                                                   (subtotal +=
@@ -330,9 +351,12 @@ function App() {
                                                   <p className="useless">
                                                     {
                                                       (gst5Total +=
-                                                        0.05 * prices.TieS14)
+                                                        0.05 *
+                                                        item *
+                                                        prices.TieS14)
                                                     }
                                                   </p>
+
                                                   <p className="useless">
                                                     {
                                                       (subtotal +=
@@ -346,7 +370,7 @@ function App() {
                                             </>
                                           )}
 
-                                          {/* Tie Knot */}
+                                          {/* Tie Knot ✅ */}
                                           {(formData[0][index].includes(
                                             "tie-Knot"
                                           ) &&
@@ -375,7 +399,7 @@ function App() {
                                               <p className="useless">
                                                 {
                                                   (gst5Total +=
-                                                    0.05 * prices.TieS14)
+                                                    0.05 * item * prices.TieS14)
                                                 }
                                               </p>
                                               <p className="useless">
@@ -389,7 +413,7 @@ function App() {
                                             ""
                                           )}
 
-                                          {/* Belt Price */}
+                                          {/* Belt Price ✅ */}
                                           {formData[0][index].includes(
                                             "Belt"
                                           ) ? (
@@ -401,7 +425,7 @@ function App() {
                                               <p className="useless">
                                                 {
                                                   (gst5Total +=
-                                                    0.05 * prices.Belt)
+                                                    0.05 * item * prices.Belt)
                                                 }
                                               </p>
                                               <p className="useless">
@@ -421,502 +445,607 @@ function App() {
                                       </>
                                     ) : (
                                       // For all Other Items
-                                      <tr>
-                                        <td key={index}>
-                                          {formData[0][index]}
-                                        </td>
-                                        <td key={index}>{item}</td>
-                                        <td key={index}>
-                                          {elements[index + 1]}
-                                        </td>
+                                      <>
+                                        {elements[index + 1] != "0" ? (
+                                          <tr>
+                                            <td key={index}>
+                                              {formData[0][index]}
+                                            </td>
+                                            <td key={index}>{item}</td>
+                                            <td key={index}>
+                                              {elements[index + 1]}
+                                            </td>
 
-                                        {/* Winter Jacket */}
-                                        {(formData[0][index].includes(
-                                          "Winter Jacket"
-                                        ) &&
-                                          formData[0][index].includes("F14")) ||
-                                        (formData[0][index].includes(
-                                          "Winter Jacket"
-                                        ) &&
-                                          formData[0][index].includes(
-                                            "M14"
-                                          )) ? (
-                                          <>
-                                            <td key={index}>
-                                              {prices.HoodieS14}
-                                            </td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.HoodieS14}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst5Total +=
-                                                  0.05 * prices.HoodieS14)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.HoodieS14)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          <>
-                                            {formData[0][index].includes(
+                                            {/* Winter Jacket ✅*/}
+                                            {(formData[0][index].includes(
                                               "Winter Jacket"
                                             ) &&
-                                            formData[0][index].includes(
-                                              "S512"
-                                            ) ? (
+                                              formData[0][index].includes(
+                                                "F14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Winter Jacket"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "M14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Winter Jacket"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "O14"
+                                              )) ? (
                                               <>
                                                 <td key={index}>
-                                                  {prices.HoodieS512}
+                                                  {prices.HoodieS14}
                                                 </td>
                                                 <td key={index}>
                                                   {elements[index + 1] *
-                                                    prices.HoodieS512}
+                                                    prices.HoodieS14}
                                                 </td>
                                                 <p className="useless">
+                                                  {" "}
+                                                  hahah
                                                   {
                                                     (gst5Total +=
-                                                      0.05 * prices.HoodieS512)
+                                                      0.05 *
+                                                      elements[index + 1] *
+                                                      prices.HoodieS14)
                                                   }
                                                 </p>
                                                 <p className="useless">
                                                   {
                                                     (subtotal +=
                                                       elements[index + 1] *
-                                                      prices.HoodieS512)
+                                                      prices.HoodieS14)
                                                   }
                                                 </p>
                                               </>
                                             ) : (
-                                              ""
+                                              <>
+                                                {formData[0][index].includes(
+                                                  "Winter Jacket"
+                                                ) &&
+                                                formData[0][index].includes(
+                                                  "S512"
+                                                ) ? (
+                                                  <>
+                                                    <td key={index}>
+                                                      {prices.HoodieS512}
+                                                    </td>
+                                                    <td key={index}>
+                                                      {elements[index + 1] *
+                                                        prices.HoodieS512}
+                                                    </td>
+                                                    <p className="useless">
+                                                      {
+                                                        (gst5Total +=
+                                                          0.05 *
+                                                          elements[index + 1] *
+                                                          prices.HoodieS512)
+                                                      }
+                                                    </p>
+                                                    <p className="useless">
+                                                      {
+                                                        (subtotal +=
+                                                          elements[index + 1] *
+                                                          prices.HoodieS512)
+                                                      }
+                                                    </p>
+                                                  </>
+                                                ) : (
+                                                  ""
+                                                )}
+                                              </>
                                             )}
-                                          </>
-                                        )}
 
-                                        {/* Shirts */}
-                                        {(formData[0][index].includes(
-                                          "Shirt"
-                                        ) &&
-                                          formData[0][index].includes("F14")) ||
-                                        (formData[0][index].includes("Shirt") &&
-                                          formData[0][index].includes(
-                                            "M14"
-                                          )) ? (
-                                          <>
-                                            <td key={index}>
-                                              {prices.ShirtS14}
-                                            </td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.ShirtS14}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst5Total +=
-                                                  0.05 * prices.ShirtS14)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.ShirtS14)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          <>
-                                            {formData[0][index].includes(
+                                            {/* Shirts ✅*/}
+                                            {(formData[0][index].includes(
                                               "Shirt"
                                             ) &&
-                                            formData[0][index].includes(
-                                              "S512"
-                                            ) ? (
+                                              formData[0][index].includes(
+                                                "F14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Shirt"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "M14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Shirt"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "O14"
+                                              ) &&
+                                              elements[index + 1] != "0") ? (
                                               <>
                                                 <td key={index}>
-                                                  {prices.ShirtS512}
+                                                  {prices.ShirtS14}
                                                 </td>
                                                 <td key={index}>
                                                   {elements[index + 1] *
-                                                    prices.ShirtS512}
+                                                    prices.ShirtS14}
                                                 </td>
                                                 <p className="useless">
                                                   {
                                                     (gst5Total +=
-                                                      0.05 * prices.ShirtS512)
+                                                      0.05 *
+                                                      elements[index + 1] *
+                                                      prices.ShirtS14)
                                                   }
                                                 </p>
                                                 <p className="useless">
                                                   {
                                                     (subtotal +=
                                                       elements[index + 1] *
-                                                      prices.ShirtS512)
+                                                      prices.ShirtS14)
+                                                  }
+                                                </p>
+                                              </>
+                                            ) : (
+                                              <>
+                                                {formData[0][index].includes(
+                                                  "Shirt"
+                                                ) &&
+                                                formData[0][index].includes(
+                                                  "S512"
+                                                ) &&
+                                                elements[index + 1] != "0" ? (
+                                                  <>
+                                                    <td key={index}>
+                                                      {prices.ShirtS512}
+                                                    </td>
+                                                    <td key={index}>
+                                                      {elements[index + 1] *
+                                                        prices.ShirtS512}
+                                                    </td>
+                                                    <p className="useless">
+                                                      {
+                                                        (gst5Total +=
+                                                          0.05 *
+                                                          elements[index + 1] *
+                                                          prices.ShirtS512)
+                                                      }
+                                                    </p>
+                                                    <p className="useless">
+                                                      {
+                                                        (subtotal +=
+                                                          elements[index + 1] *
+                                                          prices.ShirtS512)
+                                                      }
+                                                    </p>
+                                                  </>
+                                                ) : (
+                                                  ""
+                                                )}
+                                              </>
+                                            )}
+
+                                            {/* Trousers ✅*/}
+                                            {formData[0][index].includes(
+                                              "Trousers"
+                                            ) &&
+                                            formData[0][index].includes(
+                                              "S512"
+                                            ) ? (
+                                              <>
+                                                <td key={index}>
+                                                  {prices.TrousersS512}
+                                                </td>
+                                                <td key={index}>
+                                                  {elements[index + 1] *
+                                                    prices.TrousersS512}
+                                                </td>
+                                                <p className="useless">
+                                                  {
+                                                    (gst5Total +=
+                                                      0.05 *
+                                                      elements[index + 1] *
+                                                      prices.TrousersS512)
+                                                  }
+                                                </p>
+                                                <p className="useless">
+                                                  {
+                                                    (subtotal +=
+                                                      elements[index + 1] *
+                                                      prices.TrousersS512)
                                                   }
                                                 </p>
                                               </>
                                             ) : (
                                               ""
                                             )}
-                                          </>
-                                        )}
 
-                                        {/* Trousers */}
-                                        {formData[0][index].includes(
-                                          "Trousers"
-                                        ) &&
-                                        formData[0][index].includes("S512") ? (
-                                          <>
-                                            <td key={index}>
-                                              {prices.TrousersS512}
-                                            </td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.TrousersS512}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst5Total +=
-                                                  0.05 * prices.TrousersS512)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.TrousersS512)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          ""
-                                        )}
-
-                                        {/* Track Pants */}
-                                        {(formData[0][index].includes(
-                                          "Track Pants"
-                                        ) &&
-                                          formData[0][index].includes("F14")) ||
-                                        (formData[0][index].includes(
-                                          "Track Pants"
-                                        ) &&
-                                          formData[0][index].includes(
-                                            "M14"
-                                          )) ? (
-                                          <>
-                                            <td key={index}>
-                                              {prices.TrackPantsS14}
-                                            </td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.TrackPantsS14}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst5Total +=
-                                                  0.05 * prices.TrackPantsS14)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.TrackPantsS14)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          <>
-                                            {formData[0][index].includes(
+                                            {/* Track Pants ✅*/}
+                                            {(formData[0][index].includes(
                                               "Track Pants"
                                             ) &&
-                                            formData[0][index].includes(
-                                              "S512"
-                                            ) ? (
+                                              formData[0][index].includes(
+                                                "F14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Track Pants"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "M14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Track Pants"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "O14"
+                                              )) ? (
                                               <>
                                                 <td key={index}>
-                                                  {prices.TrackPantsS512}
+                                                  {prices.TrackPantsS14}
                                                 </td>
                                                 <td key={index}>
                                                   {elements[index + 1] *
-                                                    prices.TrackPantsS512}
+                                                    prices.TrackPantsS14}
                                                 </td>
                                                 <p className="useless">
                                                   {
                                                     (gst5Total +=
                                                       0.05 *
-                                                      prices.TrackPantsS512)
+                                                      elements[index + 1] *
+                                                      prices.TrackPantsS14)
                                                   }
                                                 </p>
                                                 <p className="useless">
                                                   {
                                                     (subtotal +=
                                                       elements[index + 1] *
-                                                      prices.TrackPantsS512)
+                                                      prices.TrackPantsS14)
                                                   }
                                                 </p>
                                               </>
                                             ) : (
-                                              ""
+                                              <>
+                                                {formData[0][index].includes(
+                                                  "Track Pants"
+                                                ) &&
+                                                formData[0][index].includes(
+                                                  "S512"
+                                                ) ? (
+                                                  <>
+                                                    <td key={index}>
+                                                      {prices.TrackPantsS512}
+                                                    </td>
+                                                    <td key={index}>
+                                                      {elements[index + 1] *
+                                                        prices.TrackPantsS512}
+                                                    </td>
+                                                    <p className="useless">
+                                                      {
+                                                        (gst5Total +=
+                                                          0.05 *
+                                                          elements[index + 1] *
+                                                          prices.TrackPantsS512)
+                                                      }
+                                                    </p>
+                                                    <p className="useless">
+                                                      {
+                                                        (subtotal +=
+                                                          elements[index + 1] *
+                                                          prices.TrackPantsS512)
+                                                      }
+                                                    </p>
+                                                  </>
+                                                ) : (
+                                                  ""
+                                                )}
+                                              </>
                                             )}
-                                          </>
-                                        )}
 
-                                        {/* Track T Shirt */}
-                                        {(formData[0][index].includes(
-                                          "Track"
-                                        ) &&
-                                          formData[0][index].includes(
-                                            "T-shirt"
-                                          ) &&
-                                          formData[0][index].includes("F14")) ||
-                                        (formData[0][index].includes("Track") &&
-                                          formData[0][index].includes(
-                                            "T-shirt"
-                                          ) &&
-                                          formData[0][index].includes(
-                                            "M14"
-                                          )) ? (
-                                          <>
-                                            <td key={index}>
-                                              {prices.TrackTShirtS14}
-                                            </td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.TrackTShirtS14}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst5Total +=
-                                                  0.05 * prices.TrackTShirtS14)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.TrackTShirtS14)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          <>
-                                            {formData[0][index].includes(
+                                            {/* Track T Shirt ✅*/}
+                                            {(formData[0][index].includes(
                                               "Track"
                                             ) &&
-                                            formData[0][index].includes(
-                                              "T-shirt"
+                                              formData[0][index].includes(
+                                                "T-shirt"
+                                              ) &&
+                                              formData[0][index].includes(
+                                                "F14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Track"
                                             ) &&
-                                            formData[0][index].includes(
-                                              "S512"
-                                            ) ? (
+                                              formData[0][index].includes(
+                                                "T-shirt"
+                                              ) &&
+                                              formData[0][index].includes(
+                                                "M14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Track"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "T-shirt"
+                                              ) &&
+                                              formData[0][index].includes(
+                                                "O14"
+                                              )) ? (
                                               <>
                                                 <td key={index}>
-                                                  {prices.TrackTShirtS512}
+                                                  {prices.TrackTShirtS14}
                                                 </td>
                                                 <td key={index}>
                                                   {elements[index + 1] *
-                                                    prices.TrackTShirtS512}
+                                                    prices.TrackTShirtS14}
                                                 </td>
                                                 <p className="useless">
                                                   {
                                                     (gst5Total +=
                                                       0.05 *
-                                                      prices.TrackTShirtS512)
+                                                      elements[index + 1] *
+                                                      prices.TrackTShirtS14)
                                                   }
                                                 </p>
                                                 <p className="useless">
                                                   {
                                                     (subtotal +=
                                                       elements[index + 1] *
-                                                      prices.TrackTShirtS512)
+                                                      prices.TrackTShirtS14)
                                                   }
                                                 </p>
                                               </>
                                             ) : (
-                                              ""
+                                              <>
+                                                {formData[0][index].includes(
+                                                  "Track"
+                                                ) &&
+                                                formData[0][index].includes(
+                                                  "T-shirt"
+                                                ) &&
+                                                formData[0][index].includes(
+                                                  "S512"
+                                                ) ? (
+                                                  <>
+                                                    <td key={index}>
+                                                      {prices.TrackTShirtS512}
+                                                    </td>
+                                                    <td key={index}>
+                                                      {elements[index + 1] *
+                                                        prices.TrackTShirtS512}
+                                                    </td>
+                                                    <p className="useless">
+                                                      {
+                                                        (gst5Total +=
+                                                          0.05 *
+                                                          elements[index + 1] *
+                                                          prices.TrackTShirtS512)
+                                                      }
+                                                    </p>
+                                                    <p className="useless">
+                                                      {
+                                                        (subtotal +=
+                                                          elements[index + 1] *
+                                                          prices.TrackTShirtS512)
+                                                      }
+                                                    </p>
+                                                  </>
+                                                ) : (
+                                                  ""
+                                                )}
+                                              </>
                                             )}
-                                          </>
-                                        )}
 
-                                        {/* Blazers */}
-                                        {formData[0][index].includes(
-                                          "Blazer"
-                                        ) &&
-                                        formData[0][index].includes("S512") ? (
-                                          <>
-                                            <td key={index}>{prices.Blazer}</td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.Blazer}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst12Total +=
-                                                  0.12 * prices.Blazer)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.Blazer)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          ""
-                                        )}
-
-                                        {/* Shorts */}
-                                        {(formData[0][index].includes(
-                                          "Shorts"
-                                        ) &&
-                                          formData[0][index].includes("M14")) ||
-                                        (formData[0][index].includes(
-                                          "Shorts"
-                                        ) &&
-                                          formData[0][index].includes(
-                                            "F14"
-                                          )) ? (
-                                          <>
-                                            <td key={index}>{prices.Shorts}</td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.Shorts}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst5Total +=
-                                                  0.05 * prices.Shorts)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.Shorts)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          ""
-                                        )}
-
-                                        {/* Skirts */}
-                                        {formData[0][index].includes("Skirt") &&
-                                        formData[0][index].includes("F14") ? (
-                                          <>
-                                            <td key={index}>
-                                              {prices.SkirtF14}
-                                            </td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.SkirtF14}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst5Total +=
-                                                  0.05 * prices.SkirtF14)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.SkirtF14)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          ""
-                                        )}
-
-                                        {/* Socks */}
-                                        {(formData[0][index].includes(
-                                          "Socks"
-                                        ) &&
-                                          formData[0][index].includes("M14")) ||
-                                        (formData[0][index].includes("Socks") &&
-                                          formData[0][index].includes(
-                                            "F14"
-                                          )) ? (
-                                          <>
-                                            <td key={index}>
-                                              {prices.SocksS14}
-                                            </td>
-                                            <td key={index}>
-                                              {elements[index + 1] *
-                                                prices.SocksS14}
-                                            </td>
-                                            <p className="useless">
-                                              {
-                                                (gst5Total +=
-                                                  0.05 * prices.SocksS14)
-                                              }
-                                            </p>
-                                            <p className="useless">
-                                              {
-                                                (subtotal +=
-                                                  elements[index + 1] *
-                                                  prices.SocksS14)
-                                              }
-                                            </p>
-                                          </>
-                                        ) : (
-                                          <>
+                                            {/* Blazers ✅*/}
                                             {formData[0][index].includes(
-                                              "Socks"
+                                              "Blazer"
                                             ) &&
                                             formData[0][index].includes(
                                               "S512"
                                             ) ? (
                                               <>
                                                 <td key={index}>
-                                                  {prices.SocksS512}
+                                                  {prices.Blazer}
                                                 </td>
                                                 <td key={index}>
                                                   {elements[index + 1] *
-                                                    prices.SocksS512}
+                                                    prices.Blazer}
                                                 </td>
                                                 <p className="useless">
                                                   {
-                                                    (gst5Total +=
-                                                      0.05 * prices.SocksS512)
+                                                    (gst12Total +=
+                                                      0.12 *
+                                                      elements[index + 1] *
+                                                      prices.Blazer)
                                                   }
                                                 </p>
                                                 <p className="useless">
                                                   {
                                                     (subtotal +=
                                                       elements[index + 1] *
-                                                      prices.SocksS512)
+                                                      prices.Blazer)
                                                   }
                                                 </p>
                                               </>
                                             ) : (
                                               ""
                                             )}
-                                          </>
+
+                                            {/* Shorts ✅*/}
+                                            {(formData[0][index].includes(
+                                              "Shorts"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "M14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Shorts"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "F14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Shorts"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "O14"
+                                              )) ? (
+                                              <>
+                                                <td key={index}>
+                                                  {prices.Shorts}
+                                                </td>
+                                                <td key={index}>
+                                                  {elements[index + 1] *
+                                                    prices.Shorts}
+                                                </td>
+                                                <p className="useless">
+                                                  {
+                                                    (gst5Total +=
+                                                      0.05 *
+                                                      elements[index + 1] *
+                                                      prices.Shorts)
+                                                  }
+                                                </p>
+                                                <p className="useless">
+                                                  {
+                                                    (subtotal +=
+                                                      elements[index + 1] *
+                                                      prices.Shorts)
+                                                  }
+                                                </p>
+                                              </>
+                                            ) : (
+                                              ""
+                                            )}
+
+                                            {/* Skirts ✅*/}
+                                            {(formData[0][index].includes(
+                                              "Skirt"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "F14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Skirt"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "O14"
+                                              )) ? (
+                                              <>
+                                                <td key={index}>
+                                                  {prices.SkirtF14}
+                                                </td>
+                                                <td key={index}>
+                                                  {elements[index + 1] *
+                                                    prices.SkirtF14}
+                                                </td>
+                                                <p className="useless">
+                                                  {
+                                                    (gst5Total +=
+                                                      0.05 *
+                                                      elements[index + 1] *
+                                                      prices.SkirtF14)
+                                                  }
+                                                </p>
+                                                <p className="useless">
+                                                  {
+                                                    (subtotal +=
+                                                      elements[index + 1] *
+                                                      prices.SkirtF14)
+                                                  }
+                                                </p>
+                                              </>
+                                            ) : (
+                                              ""
+                                            )}
+
+                                            {/* Socks ✅*/}
+                                            {(formData[0][index].includes(
+                                              "Socks"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "M14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Socks"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "F14"
+                                              )) ||
+                                            (formData[0][index].includes(
+                                              "Socks"
+                                            ) &&
+                                              formData[0][index].includes(
+                                                "O14"
+                                              )) ? (
+                                              <>
+                                                <td key={index}>
+                                                  {prices.SocksS14}
+                                                </td>
+                                                <td key={index}>
+                                                  {elements[index + 1] *
+                                                    prices.SocksS14}
+                                                </td>
+                                                <p className="useless">
+                                                  {
+                                                    (gst5Total +=
+                                                      0.05 *
+                                                      elements[index + 1] *
+                                                      prices.SocksS14)
+                                                  }
+                                                </p>
+                                                <p className="useless">
+                                                  {
+                                                    (subtotal +=
+                                                      elements[index + 1] *
+                                                      prices.SocksS14)
+                                                  }
+                                                </p>
+                                              </>
+                                            ) : (
+                                              <>
+                                                {formData[0][index].includes(
+                                                  "Socks"
+                                                ) &&
+                                                formData[0][index].includes(
+                                                  "S512"
+                                                ) ? (
+                                                  <>
+                                                    <td key={index}>
+                                                      {prices.SocksS512}
+                                                    </td>
+                                                    <td key={index}>
+                                                      {elements[index + 1] *
+                                                        prices.SocksS512}
+                                                    </td>
+                                                    <p className="useless">
+                                                      {
+                                                        (gst5Total +=
+                                                          0.05 *
+                                                          elements[index + 1] *
+                                                          prices.SocksS512)
+                                                      }
+                                                    </p>
+                                                    <p className="useless">
+                                                      {
+                                                        (subtotal +=
+                                                          elements[index + 1] *
+                                                          prices.SocksS512)
+                                                      }
+                                                    </p>
+                                                  </>
+                                                ) : (
+                                                  ""
+                                                )}
+                                              </>
+                                            )}
+                                          </tr>
+                                        ) : (
+                                          ""
                                         )}
-                                      </tr>
+                                      </>
                                     )}
                                   </>
                                 ) : (
                                   ""
                                 )}
                                 {/* {
-                              <tr>
-                                {}
-                                <td key={index}>{formData[0][index]}</td>
-                                <td key={index}>{item}</td>
-                                <td key={index}>{elements[index + 1]}</td>
-                                {console.log(item)}
-                              </tr>
+                              
                             } */}
                                 {<span className="useless">{counter++}</span>}
                               </>
