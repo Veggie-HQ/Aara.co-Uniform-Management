@@ -52,6 +52,12 @@
   padding: 10px;
 }
 
+.search{
+  display:block;
+  margin:auto;
+  margin-bottom:20px;
+}
+
 .button{
   width: 150px;
   height: 40px;
@@ -111,6 +117,7 @@ td{
   justify-content: flex-end;
   align-content: center;
   margin: 20px auto;
+  margin-right:50px;
 }
 
 .taxes p{
@@ -132,16 +139,23 @@ td{
   width: fit-content;
   padding: 10px;
   padding-right: 0px;
-  margin-right: 50px;
+  margin-right: 100px;
   text-align: end;
 }
+
+.balances{
+  display: flex;
+  flex-direction: column;
+}
+
 
 .form_received{
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
-  align-content: center;
+  justify-content: space-between;
+  align-content: space-between;
   margin:20px;
+  margin-right:100px;
 }
 
 .form_received label{
@@ -165,6 +179,7 @@ td{
   align-items: flex-end;
   margin:20px;
   margin-bottom:0px;
+  margin-right:100px;
 }
 
 .sign_img {
@@ -179,9 +194,9 @@ td{
   display: flex;
   justify-content: space-between;
   align-content: flex-start;
-  background-color: rgb(231, 231, 231);
+  background-color: rgb(241, 241, 241);
   padding:15px;
-  border:2px solid rgb(241, 241, 241);
+  border:2px solid black;
   border-radius:5px;
 }
 
@@ -194,7 +209,7 @@ td{
   margin:20px;
   margin-top: 75px;
   text-align: end;
-  margin-right:50px;
+  margin-right:100px;
 }
 
 .header {
