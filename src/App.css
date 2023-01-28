@@ -32,6 +32,11 @@
   margin: 10px;
 }
 
+.form_item.text2:focus {
+  border: 3px solid rgb(0, 0, 0) !important;
+  text-decoration: none !important;
+}
+
 .text{
   width: 300px;
   height: 40px;
@@ -88,28 +93,74 @@ td{
   align-items: center;
 }
 
-.total_container {
-  display:flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+.taxes{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-content: center;
+  margin: 20px auto;
+}
+
+.taxes p{
+  text-align: end;
+  padding: 5px;
+  padding-right: 50px;
 }
 
 .total{
   margin: 10px auto;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-end;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-size: larger;
-  border: 4px solid rgb(116, 111, 111);
-  width: 180px;
+  font-size: large;
+  border: 2px solid rgb(116, 111, 111);
+  border-left: 0px;
+  border-right: 0px;
+  width: fit-content;
   padding: 10px;
-  font-weight: 700;
-  /* margin-top: 50px; */
+  padding-right: 0px;
+  margin-right: 50px;
+  text-align: end;
 }
 
+.form_received{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-content: center;
+  margin:20px;
+}
+
+.form_received label{
+  align-self: center;
+}
+
+
+.text2{
+  width: 150px;
+  height: 30px;
+  border: 2px rgb(0, 39, 145) solid;
+  border-radius: 5px;
+  background-color: #f2fcff;
+  padding:8px;
+}
+
+.total_words{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  margin:20px;
+}
+
+#words{
+  margin-top:10px;
+}
+.bold{
+  font-weight: 800;
+}
 .App {
   text-align: center;
 }
