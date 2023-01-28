@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { jsPDF } from "jspdf";
+import Re from "./assets/re.png";
+import Sign from "./assets/sign.jpeg";
+import Header from "./assets/header.png";
 
 function App() {
   const [formData, setData] = useState([]);
@@ -8,6 +11,7 @@ function App() {
   const [selStud, setSelStud] = useState(0);
   const [confirmed, setConfirmed] = useState(false);
   const [recvamt, setRecvamt] = useState(0.0);
+  const [name, setName] = useState("");
 
   var url =
     "https://sheets.googleapis.com/v4/spreadsheets/" +
@@ -99,6 +103,16 @@ function App() {
     "Ninety",
   ];
 
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  let mm = today.getMonth() + 1; // Months start at 0!
+  let dd = today.getDate();
+
+  if (dd < 10) dd = "0" + dd;
+  if (mm < 10) mm = "0" + mm;
+
+  const formattedToday = dd + "/" + mm + "/" + yyyy;
+
   function inWords(num) {
     if ((num = num.toString()).length > 9) return "overflow";
     let n = ("000000000" + num)
@@ -134,18 +148,22 @@ function App() {
   const invoiceDownloader = () => {
     let doc = new jsPDF();
     let element = document.getElementById("contents");
+    let h = document.getElementById("header");
+    let b = document.getElementById("balances");
+    b.classList.add("useless");
+    h.classList.remove("useless");
 
     doc.html(element, {
       callback: function (doc) {
         doc.save(`${mobNumber}.pdf`);
       },
-      margin: [30, 0, 0, 20],
+      margin: [20, 0, 0, 20],
       autoPaging: "text",
       x: 0,
       y: 0,
       width: 175,
       //675
-      windowWidth: 800,
+      windowWidth: 1000,
     });
   };
 
@@ -249,6 +267,40 @@ function App() {
         <div>
           {/* Display Order Details */}
           <div id="contents">
+            <img
+              src={Header}
+              alt="header"
+              className="header useless"
+              id="header"
+            />
+            <div>
+              <div className="billto">
+                <div className="left left_bill">
+                  <p class="date bold">Invoice No.: {}</p>
+                  <p className="bold">BILL TO</p>
+
+                  <p>
+                    {filteredOrders[selStud] != ""
+                      ? filteredOrders[selStud][1]
+                      : ""}
+                  </p>
+                  <p>
+                    Going to Class:{" "}
+                    {filteredOrders[selStud][3] != ""
+                      ? filteredOrders[selStud][3]
+                      : filteredOrders[selStud][9] != ""
+                      ? filteredOrders[selStud][9]
+                      : filteredOrders[selStud][55]}
+                  </p>
+
+                  <p>Bangalore</p>
+                </div>
+                <div className="right">
+                  <p class="date bold">Invoice Date: {formattedToday}</p>
+                </div>
+              </div>
+            </div>
+
             <table className="table order_details" id="contentsTable">
               <thead>
                 <tr>
@@ -441,8 +493,7 @@ function App() {
                                     ) : (
                                       // For all Other Items
                                       <>
-                                        {elements[index + 1] != "0" ||
-                                        elements[index + 1] != "" ? (
+                                        {elements[index + 1] != "0" ? (
                                           <tr>
                                             <td key={index}>
                                               {formData[0][index]}
@@ -1069,7 +1120,6 @@ function App() {
                   </p>
                 </div>
               </div>
-
               <div className="right">
                 <div className="taxes">
                   <div className="left">
@@ -1082,12 +1132,31 @@ function App() {
                     <p>Round Off</p>
                   </div>
                   <div className="right">
-                    <p>₹ {subtotal}</p>
-                    <p>₹ {gst5Total / 2}</p>
-                    <p>₹ {gst5Total / 2}</p>
-                    <p>₹ {gst12Total / 2}</p>
-                    <p>₹ {gst12Total / 2}</p>
-                    <p>₹ {subtotal + gst5Total + gst12Total}</p>
+                    <p>
+                      <img src={Re} className="resymbol" alt="rupee" />
+                      {subtotal}
+                    </p>
+
+                    <p>
+                      <img src={Re} className="resymbol" alt="rupee" />
+                      {gst5Total / 2}
+                    </p>
+                    <p>
+                      <img src={Re} className="resymbol" alt="rupee" />
+                      {gst5Total / 2}
+                    </p>
+                    <p>
+                      <img src={Re} className="resymbol" alt="rupee" />
+                      {gst12Total / 2}
+                    </p>
+                    <p>
+                      <img src={Re} className="resymbol" alt="rupee" />
+                      {gst12Total / 2}
+                    </p>
+                    <p>
+                      <img src={Re} className="resymbol" alt="rupee" />
+                      {subtotal + gst5Total + gst12Total}
+                    </p>
 
                     <p>
                       {Math.round(subtotal + gst5Total + gst12Total) -
@@ -1097,42 +1166,50 @@ function App() {
                 </div>
 
                 <p className="total bold">
-                  TOTAL AMOUNT: ₹{" "}
+                  TOTAL AMOUNT: {"   "} Rs.
                   {Math.round(subtotal + gst5Total + gst12Total)}
                 </p>
-                <div className="form_received">
-                  <label className="form_item" htmlFor="received_amt">
-                    Received Amount
-                  </label>
-                  <input
-                    className="form_item text2"
-                    type="text"
-                    name="received_amt"
-                    id="received_amt"
-                    onChange={amountHandler}
-                  />
-                </div>
-                <div className="taxes">
-                  <div className="left">
-                    <p>Received Amount</p>
-                    <p>Balance</p>
+                <div className="balances" id="balances">
+                  <div className="form_received">
+                    <label className="form_item" htmlFor="received_amt">
+                      Received Amount
+                    </label>
+                    <input
+                      className="form_item text2"
+                      type="text"
+                      name="received_amt"
+                      id="received_amt"
+                      onChange={amountHandler}
+                    />
                   </div>
-                  <div className="right">
-                    <p>₹ {recvamt}</p>
-                    <p>
-                      ₹{" "}
-                      {Math.round(subtotal + gst5Total + gst12Total) - recvamt}
-                    </p>
+                  <div className="taxes">
+                    <div className="left">
+                      <p>Received Amount</p>
+                      <p>Balance</p>
+                    </div>
+                    <div className="right">
+                      <p>
+                        <img src={Re} className="resymbol" alt="rupee" />
+                        {recvamt}
+                      </p>
+                      <p>
+                        <img src={Re} className="resymbol" alt="rupee" />{" "}
+                        {Math.round(subtotal + gst5Total + gst12Total) -
+                          recvamt}
+                      </p>
+                    </div>
                   </div>
                 </div>
+
                 <div className="total_words">
                   <p className="bold">Total Amount (in words)</p>
                   <p id="words">
-                    {inWords(Math.ceil(subtotal + gst5Total + gst12Total))}
+                    {inWords(Math.round(subtotal + gst5Total + gst12Total))}
                   </p>
                 </div>
 
                 <div className="sign">
+                  <img src={Sign} className="sign_img" alt="Authorised Sign" />
                   <p className="bold">Authorised Signatory for</p>
                   <p id="words">Aara.co</p>
                 </div>
@@ -1143,7 +1220,7 @@ function App() {
 
         <div className="button_container">
           {confirmed ? (
-            <button className="button confirm" onClick={invoiceDownloader()}>
+            <button className="button confirm" onClick={invoiceDownloader}>
               Download Invoice
             </button>
           ) : (
