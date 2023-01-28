@@ -131,11 +131,22 @@ function App() {
     return str;
   }
 
-  // document.getElementById("number").onkeyup = function () {
-  //   document.getElementById("words").innerHTML = inWords(
-  //     document.getElementById("number").value
-  //   );
-  // };
+  const invoiceDownloader = () => {
+    let doc = new jsPDF();
+    let element = document.getElementById("contents");
+
+    doc.html(element, {
+      callback: function (doc) {
+        doc.save(`${mobNumber}.pdf`);
+      },
+      margin: [15, 15, 15, 15],
+      autoPaging: "text",
+      x: 0,
+      y: 0,
+      width: 190,
+      windowWidth: 675,
+    });
+  };
 
   let len = 0;
   let subtotal = 0.0;
@@ -171,13 +182,13 @@ function App() {
   //   element.click();
   // };
 
-  const invoiceDownloader = () => {
-    const element = document.getElementById("container_content");
-    const doc = new jsPDF();
-    let headers = ["Item", "Size", "Quantity", "Price"];
-    doc.table(25, 50, element.innerText, headers, { autoSize: true });
-    doc.save(`${mobNumber}.pdf`);
-  };
+  // const invoiceDownloader = () => {
+  //   const element = document.getElementById("container_content");
+  //   const doc = new jsPDF();
+  //   let headers = ["Item", "Size", "Quantity", "Price"];
+  //   doc.table(25, 50, element.innerText, headers, { autoSize: true });
+  //   doc.save(`${mobNumber}.pdf`);
+  // };
 
   return (
     <>
@@ -446,7 +457,8 @@ function App() {
                                     ) : (
                                       // For all Other Items
                                       <>
-                                        {elements[index + 1] != "0" ? (
+                                        {elements[index + 1] != "0" ||
+                                        elements[index + 1] != "" ? (
                                           <tr>
                                             <td key={index}>
                                               {formData[0][index]}
@@ -1061,63 +1073,66 @@ function App() {
                   : ""}
               </tbody>
             </table>
-          </div>
-          <div className="taxes">
-            <div className="left">
-              <p>Subtotal</p>
-              <p>CGST @2.5%</p>
-              <p>SGST @2.5%</p>
-              <p>CGST @6%</p>
-              <p>SGST @6%</p>
-              <p>Total Before Round Off</p>
-              <p>Round Off</p>
-            </div>
-            <div className="right">
-              <p>₹ {subtotal}</p>
-              <p>₹ {gst5Total / 2}</p>
-              <p>₹ {gst5Total / 2}</p>
-              <p>₹ {gst12Total / 2}</p>
-              <p>₹ {gst12Total / 2}</p>
-              <p>₹ {subtotal + gst5Total + gst12Total}</p>
 
-              <p>
-                {Math.round(subtotal + gst5Total + gst12Total) -
-                  (subtotal + gst5Total + gst12Total)}
-              </p>
-            </div>
-          </div>
+            <div className="taxes">
+              <div className="left">
+                <p>Subtotal</p>
+                <p>CGST @2.5%</p>
+                <p>SGST @2.5%</p>
+                <p>CGST @6%</p>
+                <p>SGST @6%</p>
+                <p>Total Before Round Off</p>
+                <p>Round Off</p>
+              </div>
+              <div className="right">
+                <p>₹ {subtotal}</p>
+                <p>₹ {gst5Total / 2}</p>
+                <p>₹ {gst5Total / 2}</p>
+                <p>₹ {gst12Total / 2}</p>
+                <p>₹ {gst12Total / 2}</p>
+                <p>₹ {subtotal + gst5Total + gst12Total}</p>
 
-          <p className="total bold">
-            TOTAL AMOUNT: ₹ {Math.round(subtotal + gst5Total + gst12Total)}
-          </p>
-          <div className="form_received">
-            <label className="form_item" htmlFor="received_amt">
-              Received Amount
-            </label>
-            <input
-              className="form_item text2"
-              type="text"
-              name="received_amt"
-              id="received_amt"
-              onChange={amountHandler}
-            />
-          </div>
-          <div className="taxes">
-            <div className="left">
-              <p>Received Amount</p>
-              <p>Balance</p>
+                <p>
+                  {Math.round(subtotal + gst5Total + gst12Total) -
+                    (subtotal + gst5Total + gst12Total)}
+                </p>
+              </div>
             </div>
-            <div className="right">
-              <p>₹ {recvamt}</p>
-              <p>₹ {Math.round(subtotal + gst5Total + gst12Total) - recvamt}</p>
+
+            <p className="total bold">
+              TOTAL AMOUNT: ₹ {Math.round(subtotal + gst5Total + gst12Total)}
+            </p>
+            <div className="form_received">
+              <label className="form_item" htmlFor="received_amt">
+                Received Amount
+              </label>
+              <input
+                className="form_item text2"
+                type="text"
+                name="received_amt"
+                id="received_amt"
+                onChange={amountHandler}
+              />
+            </div>
+            <div className="taxes">
+              <div className="left">
+                <p>Received Amount</p>
+                <p>Balance</p>
+              </div>
+              <div className="right">
+                <p>₹ {recvamt}</p>
+                <p>
+                  ₹ {Math.round(subtotal + gst5Total + gst12Total) - recvamt}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="total_words">
-          <p className="bold">Total Amount (in words)</p>
-          <p id="words">
-            {inWords(Math.ceil(subtotal + gst5Total + gst12Total))}
-          </p>
+          <div className="total_words">
+            <p className="bold">Total Amount (in words)</p>
+            <p id="words">
+              {inWords(Math.ceil(subtotal + gst5Total + gst12Total))}
+            </p>
+          </div>
         </div>
 
         <div className="button_container">
