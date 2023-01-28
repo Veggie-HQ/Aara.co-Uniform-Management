@@ -139,12 +139,13 @@ function App() {
       callback: function (doc) {
         doc.save(`${mobNumber}.pdf`);
       },
-      margin: [15, 15, 15, 15],
+      margin: [30, 0, 0, 20],
       autoPaging: "text",
       x: 0,
       y: 0,
-      width: 190,
-      windowWidth: 675,
+      width: 175,
+      //675
+      windowWidth: 800,
     });
   };
 
@@ -172,23 +173,6 @@ function App() {
     Belt: 100,
     Blazer: 1600,
   };
-
-  // const invoiceDownloader = (event) => {
-  //   const file = new Blob([filteredOrders[selStud]], { type: "text/plain" });
-  //   const element = document.createElement("a");
-  //   element.href = URL.createObjectURL(file);
-  //   element.download = `invoice` + `.pdf`;
-  //   document.body.appendChild(element); // Required for this to work in FireFox
-  //   element.click();
-  // };
-
-  // const invoiceDownloader = () => {
-  //   const element = document.getElementById("container_content");
-  //   const doc = new jsPDF();
-  //   let headers = ["Item", "Size", "Quantity", "Price"];
-  //   doc.table(25, 50, element.innerText, headers, { autoSize: true });
-  //   doc.save(`${mobNumber}.pdf`);
-  // };
 
   return (
     <>
@@ -1074,64 +1058,86 @@ function App() {
               </tbody>
             </table>
 
-            <div className="taxes">
+            <div className="info">
               <div className="left">
-                <p>Subtotal</p>
-                <p>CGST @2.5%</p>
-                <p>SGST @2.5%</p>
-                <p>CGST @6%</p>
-                <p>SGST @6%</p>
-                <p>Total Before Round Off</p>
-                <p>Round Off</p>
+                <div className="terms">
+                  <p className="bold">Terms and Conditions</p>
+                  <p id="words">
+                    1. Goods once sold will not be taken back or exchanged{" "}
+                    <br />
+                    2. All disputes are subject to Bangalore jurisdiction only
+                  </p>
+                </div>
               </div>
-              <div className="right">
-                <p>₹ {subtotal}</p>
-                <p>₹ {gst5Total / 2}</p>
-                <p>₹ {gst5Total / 2}</p>
-                <p>₹ {gst12Total / 2}</p>
-                <p>₹ {gst12Total / 2}</p>
-                <p>₹ {subtotal + gst5Total + gst12Total}</p>
 
-                <p>
-                  {Math.round(subtotal + gst5Total + gst12Total) -
-                    (subtotal + gst5Total + gst12Total)}
-                </p>
-              </div>
-            </div>
-
-            <p className="total bold">
-              TOTAL AMOUNT: ₹ {Math.round(subtotal + gst5Total + gst12Total)}
-            </p>
-            <div className="form_received">
-              <label className="form_item" htmlFor="received_amt">
-                Received Amount
-              </label>
-              <input
-                className="form_item text2"
-                type="text"
-                name="received_amt"
-                id="received_amt"
-                onChange={amountHandler}
-              />
-            </div>
-            <div className="taxes">
-              <div className="left">
-                <p>Received Amount</p>
-                <p>Balance</p>
-              </div>
               <div className="right">
-                <p>₹ {recvamt}</p>
-                <p>
-                  ₹ {Math.round(subtotal + gst5Total + gst12Total) - recvamt}
+                <div className="taxes">
+                  <div className="left">
+                    <p>Taxable Amount</p>
+                    <p>CGST @2.5%</p>
+                    <p>SGST @2.5%</p>
+                    <p>CGST @6%</p>
+                    <p>SGST @6%</p>
+                    <p>Total Before Round Off</p>
+                    <p>Round Off</p>
+                  </div>
+                  <div className="right">
+                    <p>₹ {subtotal}</p>
+                    <p>₹ {gst5Total / 2}</p>
+                    <p>₹ {gst5Total / 2}</p>
+                    <p>₹ {gst12Total / 2}</p>
+                    <p>₹ {gst12Total / 2}</p>
+                    <p>₹ {subtotal + gst5Total + gst12Total}</p>
+
+                    <p>
+                      {Math.round(subtotal + gst5Total + gst12Total) -
+                        (subtotal + gst5Total + gst12Total)}
+                    </p>
+                  </div>
+                </div>
+
+                <p className="total bold">
+                  TOTAL AMOUNT: ₹{" "}
+                  {Math.round(subtotal + gst5Total + gst12Total)}
                 </p>
+                <div className="form_received">
+                  <label className="form_item" htmlFor="received_amt">
+                    Received Amount
+                  </label>
+                  <input
+                    className="form_item text2"
+                    type="text"
+                    name="received_amt"
+                    id="received_amt"
+                    onChange={amountHandler}
+                  />
+                </div>
+                <div className="taxes">
+                  <div className="left">
+                    <p>Received Amount</p>
+                    <p>Balance</p>
+                  </div>
+                  <div className="right">
+                    <p>₹ {recvamt}</p>
+                    <p>
+                      ₹{" "}
+                      {Math.round(subtotal + gst5Total + gst12Total) - recvamt}
+                    </p>
+                  </div>
+                </div>
+                <div className="total_words">
+                  <p className="bold">Total Amount (in words)</p>
+                  <p id="words">
+                    {inWords(Math.ceil(subtotal + gst5Total + gst12Total))}
+                  </p>
+                </div>
+
+                <div className="sign">
+                  <p className="bold">Authorised Signatory for</p>
+                  <p id="words">Aara.co</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="total_words">
-            <p className="bold">Total Amount (in words)</p>
-            <p id="words">
-              {inWords(Math.ceil(subtotal + gst5Total + gst12Total))}
-            </p>
           </div>
         </div>
 
