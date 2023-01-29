@@ -114,25 +114,8 @@ td{
   align-items: center;
 }
 
-.taxes{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-content: center;
-  margin: 20px auto;
-  margin-right:0px;
-  /* width:stretch; */
-}
-
-.taxes p{
-  text-align: end;
-  padding: 5px;
-  padding-right: 50px;
-}
-
 .total{
-  margin-top: 10px;
-  margin-right: 10px;
+  margin-right: 0px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -143,8 +126,9 @@ td{
   border-right: 0px;
   width: fit-content;
   padding: 10px;
-  padding-right: 0px;
+  padding-right: 5px;
   text-align: end;
+  margin-bottom: 10px;
 }
 
 .balances{
@@ -174,6 +158,7 @@ td{
   border-radius: 5px;
   background-color: #f2fcff;
   padding:8px;
+  margin-right:0px;
 }
 
 .total_words{
@@ -195,7 +180,6 @@ td{
 }
 
 .billto {
-  /* margin: 0 50px; */
   display: flex;
   justify-content: space-between;
   align-content: flex-start;
@@ -204,6 +188,7 @@ td{
   border-radius:5px;
   width:90%;
   margin:auto;
+  margin-top: 10px;
 }
 
 .sign {
@@ -214,6 +199,7 @@ td{
   margin:20px;
   margin-top: 75px;
   text-align: end;
+  margin-right:0px;
 }
 
 .header {
@@ -237,6 +223,29 @@ td{
 }
 
 
+
+.taxes{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-content: center;
+  margin: 20px auto;
+  margin-right:0px;
+  width:stretch;
+  margin-top:0px;
+}
+
+.taxes p{
+  text-align: end;
+  padding: 5px;
+  margin-left:15px;
+}
+
+.taxes_right{
+  display:flex;
+  flex-direction: column;
+
+}
 
 .terms {
   margin: 50px;

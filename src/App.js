@@ -23,6 +23,7 @@ function App() {
   const [confirmed, setConfirmed] = useState(false);
   const [recvamt, setRecvamt] = useState(0.0);
   const [search, setSearch] = useState(false);
+  const [INV, SetINV] = useState(0);
 
   async function dataFetcher() {
     const res = await fetch(process.env.REACT_APP_GSHEETS_URL);
@@ -61,6 +62,9 @@ function App() {
     setRecvamt(e.target.value);
   };
 
+  let currKey = "";
+  let currIndex;
+  let IN;
   let counter = 1;
   let itemsplit = [];
   let columnsplit = [];
@@ -70,6 +74,33 @@ function App() {
   let subtotal = 0.0;
   let gst5Total = 0;
   let gst12Total = 0;
+
+  const confirmHandler = () => {
+    let p = prompt("Are you sure you want to confirm this order?");
+    if (p.toLocaleLowerCase() === "y" || p.toLocaleLowerCase() === "yes") {
+      let orderDetails = {
+        parent_number: mobNumber,
+        student_name:
+          filteredOrders[selStud] != "" ? filteredOrders[selStud][1] : "",
+        going_to_class:
+          filteredOrders[selStud][3] != ""
+            ? filteredOrders[selStud][3]
+            : filteredOrders[selStud][9] != ""
+            ? filteredOrders[selStud][9]
+            : filteredOrders[selStud][55],
+
+        bill_amt: Math.round(subtotal + gst5Total + gst12Total),
+        paid_amt: recvamt,
+        balance: Math.round(subtotal + gst5Total + gst12Total) - recvamt,
+        items: finalItems,
+        student_gender: filteredOrders[selStud][6],
+        email: filteredOrders[selStud][7],
+      };
+
+      PushOrderToDB(orderDetails);
+      setConfirmed(true);
+    }
+  };
 
   const invoiceDownloader = () => {
     let element = document.getElementById("contents");
@@ -91,14 +122,42 @@ function App() {
       windowWidth: 1000,
     });
 
-    /*
-    Fetch Latest Invoice # Here and store it in a var
-    let latestIN = functionCall()
-    */
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+  };
 
-    let latestIN = 500;
+  async function PushOrderToDB(order_details) {
+    const res = await fetch(process.env.REACT_APP_FIREBASE_URL, {
+      method: "POST",
+      body: JSON.stringify(order_details),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    currKey = data["name"];
+    console.log("pushed1");
 
-    let orderDetails = {
+    const res1 = await fetch(process.env.REACT_APP_FIREBASE_URL);
+    console.log("fetching");
+    const data1 = await res1.json().then((res) => {
+      console.log("fetching 2");
+      let x = Object.keys(res);
+      for (let i = 0; i < x.length; i++) {
+        console.log(x[i] + " : " + currKey);
+        if (x[i] === currKey) {
+          console.log("curr", currKey);
+          currIndex = i;
+
+          break;
+        }
+      }
+    });
+    console.log("fetched", currIndex);
+    IN = 500 + currIndex;
+
+    let modDetails = {
       parent_number: mobNumber,
       student_name:
         filteredOrders[selStud] != "" ? filteredOrders[selStud][1] : "",
@@ -115,26 +174,22 @@ function App() {
       items: finalItems,
       student_gender: filteredOrders[selStud][6],
       email: filteredOrders[selStud][7],
-      invoice_number: latestIN,
+      invoice_number: IN,
     };
 
-    PushOrderToDB(orderDetails);
-
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 1000);
-  };
-
-  async function PushOrderToDB(order_details) {
-    const res = await fetch(process.env.REACT_APP_FIREBASE_URL, {
+    const res2 = await fetch(process.env.REACT_APP_FIREBASE_URL2, {
       method: "POST",
-      body: JSON.stringify(order_details),
+      body: JSON.stringify(modDetails),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    const data = await res.json();
+    const data2 = await res2.json();
+    console.log("pushed2");
+    SetINV(IN);
   }
+
+  console.log("IN::", INV);
 
   return (
     <>
@@ -221,7 +276,7 @@ function App() {
 
               <div className="billto">
                 <div className="left left_bill">
-                  <p class="date bold">Invoice No.: {}</p>
+                  <p class="date bold">Invoice No.: {INV}</p>
                   <p className="bold">BILL TO</p>
 
                   <p>
@@ -1247,7 +1302,7 @@ function App() {
                       <p>SGST @6%</p>
                       <p>Round Off</p>
                     </div>
-                    <div className="right">
+                    <div className="right taxes_right">
                       <p>
                         <img src={Re} className="resymbol" alt="rupee" />
                         {subtotal}
@@ -1293,22 +1348,22 @@ function App() {
                         onChange={amountHandler}
                       />
                     </div>
-                    <div className="taxes">
-                      <div className="left">
-                        <p>Received Amount</p>
-                        <p>Balance</p>
-                      </div>
-                      <div className="right">
-                        <p>
-                          <img src={Re} className="resymbol" alt="rupee" />
-                          {recvamt}
-                        </p>
-                        <p>
-                          <img src={Re} className="resymbol" alt="rupee" />{" "}
-                          {Math.round(subtotal + gst5Total + gst12Total) -
-                            recvamt}
-                        </p>
-                      </div>
+                  </div>
+                  <div className="taxes">
+                    <div className="left">
+                      <p>Received Amount</p>
+                      <p>Balance</p>
+                    </div>
+                    <div className="right">
+                      <p>
+                        <img src={Re} className="resymbol" alt="rupee" />
+                        {recvamt}
+                      </p>
+                      <p>
+                        <img src={Re} className="resymbol" alt="rupee" />{" "}
+                        {Math.round(subtotal + gst5Total + gst12Total) -
+                          recvamt}
+                      </p>
                     </div>
                   </div>
 
@@ -1343,14 +1398,7 @@ function App() {
             Download Invoice
           </button>
         ) : (
-          <button
-            className="button confirm"
-            onClick={() => {
-              let p = prompt("Are you sure you want to confirm this order?");
-              if (p.localeCompare("y") || p.localeCompare("yes"))
-                setConfirmed(!confirmed);
-            }}
-          >
+          <button className="button confirm" onClick={confirmHandler}>
             Confirm order
           </button>
         )}
