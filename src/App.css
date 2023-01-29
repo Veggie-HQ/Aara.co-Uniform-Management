@@ -121,6 +121,7 @@ td{
   align-content: center;
   margin: 20px auto;
   margin-right:0px;
+  /* width:stretch; */
 }
 
 .taxes p{

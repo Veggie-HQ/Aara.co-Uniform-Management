@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { jsPDF } from "jspdf";
+
 import Re from "./assets/re.png";
 import Sign from "./assets/sign.jpeg";
 import Header from "./assets/header.png";
 
+import InvoiceDate from "./utils/InvoiceDate";
+import InWords from "./utils/InWords";
+import prices from "./utils/prices";
+
 function App() {
+  useEffect(() => {
+    // setInterval(function () {
+    dataExporter();
+    // }, 5000);
+  }, []);
+
   const [formData, setData] = useState([]);
   const [mobNumber, setMobNumber] = useState("");
   const [selStud, setSelStud] = useState(0);
@@ -13,16 +24,8 @@ function App() {
   const [recvamt, setRecvamt] = useState(0.0);
   const [search, setSearch] = useState(false);
 
-  var url =
-    "https://sheets.googleapis.com/v4/spreadsheets/" +
-    "1CqZttj_vZxXk26efpcSLG4iAv7TVSsn5rHdYfG2_-Vo" +
-    "/values/" +
-    "Sheet1" +
-    "?alt=json&key=" +
-    "AIzaSyBDkZsAZZwtRd9yNEc58sfMlyiBIliYQWE";
-
   async function dataFetcher() {
-    const res = await fetch(url);
+    const res = await fetch(process.env.REACT_APP_GSHEETS_URL);
     const data = await res.json();
     return data;
   }
@@ -50,12 +53,6 @@ function App() {
 
   dataDisplay();
 
-  useEffect(() => {
-    // setInterval(function () {
-    dataExporter();
-    // }, 5000);
-  }, []);
-
   const numberHandler = (e) => {
     setMobNumber(e.target.value);
   };
@@ -67,89 +64,18 @@ function App() {
   let counter = 1;
   let itemsplit = [];
   let columnsplit = [];
+  let finalItems = [];
 
-  let a = [
-    "",
-    "One ",
-    "Two ",
-    "Three ",
-    "Four ",
-    "Five ",
-    "Six ",
-    "Seven ",
-    "Eight ",
-    "Nine ",
-    "Ten ",
-    "Eleven ",
-    "Twelve ",
-    "Thirteen ",
-    "Fourteen ",
-    "Fifteen ",
-    "Sixteen ",
-    "Seventeen ",
-    "Eighteen ",
-    "Nineteen ",
-  ];
-  let b = [
-    "",
-    "",
-    "Twenty",
-    "Thirty",
-    "Forty",
-    "Fifty",
-    "Sixty",
-    "Seventy",
-    "Eighty",
-    "Ninety",
-  ];
-
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  let mm = today.getMonth() + 1; // Months start at 0!
-  let dd = today.getDate();
-
-  if (dd < 10) dd = "0" + dd;
-  if (mm < 10) mm = "0" + mm;
-
-  const formattedToday = dd + "/" + mm + "/" + yyyy;
-
-  function inWords(num) {
-    if ((num = num.toString()).length > 9) return "overflow";
-    let n = ("000000000" + num)
-      .substr(-9)
-      .match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-    if (!n) return;
-    var str = "";
-    str +=
-      n[1] != 0
-        ? (a[Number(n[1])] || b[n[1][0]] + " " + a[n[1][1]]) + "Crore "
-        : "";
-    str +=
-      n[2] != 0
-        ? (a[Number(n[2])] || b[n[2][0]] + " " + a[n[2][1]]) + "Lakh "
-        : "";
-    str +=
-      n[3] != 0
-        ? (a[Number(n[3])] || b[n[3][0]] + " " + a[n[3][1]]) + "Thousand "
-        : "";
-    str +=
-      n[4] != 0
-        ? (a[Number(n[4])] || b[n[4][0]] + " " + a[n[4][1]]) + "Hundred "
-        : "";
-    str +=
-      n[5] != 0
-        ? (str != "" ? "and " : "") +
-          (a[Number(n[5])] || b[n[5][0]] + " " + a[n[5][1]]) +
-          "Rupees "
-        : "";
-    return str;
-  }
+  let len = 0;
+  let subtotal = 0.0;
+  let gst5Total = 0;
+  let gst12Total = 0;
 
   const invoiceDownloader = () => {
     let element = document.getElementById("contents");
+    let b = document.getElementById("remBalance");
+    b.style.display = "none";
     let h = document.getElementById("header");
-    let b = document.getElementById("balances");
-    b.classList.add("useless");
     h.classList.remove("useless");
 
     let doc = new jsPDF();
@@ -165,35 +91,50 @@ function App() {
       windowWidth: 1000,
     });
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+    /*
+    Fetch Latest Invoice # Here and store it in a var
+    let latestIN = functionCall()
+    */
+
+    let latestIN = 500;
+
+    let orderDetails = {
+      parent_number: mobNumber,
+      student_name:
+        filteredOrders[selStud] != "" ? filteredOrders[selStud][1] : "",
+      going_to_class:
+        filteredOrders[selStud][3] != ""
+          ? filteredOrders[selStud][3]
+          : filteredOrders[selStud][9] != ""
+          ? filteredOrders[selStud][9]
+          : filteredOrders[selStud][55],
+
+      bill_amt: Math.round(subtotal + gst5Total + gst12Total),
+      paid_amt: recvamt,
+      balance: Math.round(subtotal + gst5Total + gst12Total) - recvamt,
+      items: finalItems,
+      student_gender: filteredOrders[selStud][6],
+      email: filteredOrders[selStud][7],
+      invoice_number: latestIN,
+    };
+
+    PushOrderToDB(orderDetails);
+
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 1000);
   };
 
-  let len = 0;
-  let subtotal = 0.0;
-  let gst5Total = 0;
-  let gst12Total = 0;
-
-  const prices = {
-    SocksS14: 75,
-    SocksS512: 100,
-    ShirtS14: 490,
-    ShirtS512: 540,
-    SkirtF14: 525,
-    Shorts: 490,
-    TrousersS512: 610,
-    TrackPantsS14: 380,
-    TrackPantsS512: 430,
-    TrackTShirtS14: 360,
-    TrackTShirtS512: 425,
-    HoodieS14: 550,
-    HoodieS512: 650,
-    TieS14: 100,
-    TieS512: 150,
-    Belt: 100,
-    Blazer: 1600,
-  };
+  async function PushOrderToDB(order_details) {
+    const res = await fetch(process.env.REACT_APP_FIREBASE_URL, {
+      method: "POST",
+      body: JSON.stringify(order_details),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+  }
 
   return (
     <>
@@ -300,7 +241,7 @@ function App() {
                   <p>Bangalore</p>
                 </div>
                 <div className="right right_bill">
-                  <p class="date bold">Invoice Date: {formattedToday}</p>
+                  <InvoiceDate />
                 </div>
               </div>
 
@@ -358,6 +299,13 @@ function App() {
                                               "S512"
                                             ) ? (
                                               <>
+                                                <span className="useless">
+                                                  {finalItems.push({
+                                                    name: formData[0][index],
+                                                    qty: item,
+                                                    size: "-",
+                                                  })}
+                                                </span>
                                                 <td key={index}>
                                                   {prices.TieS512}
                                                 </td>
@@ -394,6 +342,15 @@ function App() {
                                                     "F14"
                                                   )) ? (
                                                   <>
+                                                    <span className="useless">
+                                                      {finalItems.push({
+                                                        name: formData[0][
+                                                          index
+                                                        ],
+                                                        qty: item,
+                                                        size: "-",
+                                                      })}
+                                                    </span>
                                                     <td key={index}>
                                                       {prices.TieS14}
                                                     </td>
@@ -442,6 +399,13 @@ function App() {
                                                 "O14"
                                               )) ? (
                                               <>
+                                                <span className="useless">
+                                                  {finalItems.push({
+                                                    name: formData[0][index],
+                                                    qty: item,
+                                                    size: "-",
+                                                  })}
+                                                </span>
                                                 <td key={index}>
                                                   {prices.TieS14}
                                                 </td>
@@ -472,6 +436,13 @@ function App() {
                                               "Belt"
                                             ) ? (
                                               <>
+                                                <span className="useless">
+                                                  {finalItems.push({
+                                                    name: formData[0][index],
+                                                    qty: item,
+                                                    size: "-",
+                                                  })}
+                                                </span>
                                                 <td key={index}>
                                                   {prices.Belt}
                                                 </td>
@@ -500,7 +471,7 @@ function App() {
                                           </tr>
                                         </>
                                       ) : (
-                                        // For all Other Items
+                                        // For all Other Clothes
                                         <>
                                           {elements[index + 1] != "0" ? (
                                             <tr>
@@ -532,6 +503,13 @@ function App() {
                                                   "O14"
                                                 )) ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.HoodieS14}
                                                   </td>
@@ -565,6 +543,17 @@ function App() {
                                                     "S512"
                                                   ) ? (
                                                     <>
+                                                      <span className="useless">
+                                                        {finalItems.push({
+                                                          name: formData[0][
+                                                            index
+                                                          ],
+                                                          qty: elements[
+                                                            index + 1
+                                                          ],
+                                                          size: item,
+                                                        })}
+                                                      </span>
                                                       <td key={index}>
                                                         {prices.HoodieS512}
                                                       </td>
@@ -619,6 +608,13 @@ function App() {
                                                 ) &&
                                                 elements[index + 1] != "0") ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.ShirtS14}
                                                   </td>
@@ -652,6 +648,17 @@ function App() {
                                                   ) &&
                                                   elements[index + 1] != "0" ? (
                                                     <>
+                                                      <span className="useless">
+                                                        {finalItems.push({
+                                                          name: formData[0][
+                                                            index
+                                                          ],
+                                                          qty: elements[
+                                                            index + 1
+                                                          ],
+                                                          size: item,
+                                                        })}
+                                                      </span>
                                                       <td key={index}>
                                                         {prices.ShirtS512}
                                                       </td>
@@ -693,6 +700,13 @@ function App() {
                                                 "S512"
                                               ) ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.TrousersS512}
                                                   </td>
@@ -740,6 +754,13 @@ function App() {
                                                   "O14"
                                                 )) ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.TrackPantsS14}
                                                   </td>
@@ -772,6 +793,17 @@ function App() {
                                                     "S512"
                                                   ) ? (
                                                     <>
+                                                      <span className="useless">
+                                                        {finalItems.push({
+                                                          name: formData[0][
+                                                            index
+                                                          ],
+                                                          qty: elements[
+                                                            index + 1
+                                                          ],
+                                                          size: item,
+                                                        })}
+                                                      </span>
                                                       <td key={index}>
                                                         {prices.TrackPantsS512}
                                                       </td>
@@ -834,6 +866,13 @@ function App() {
                                                   "O14"
                                                 )) ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.TrackTShirtS14}
                                                   </td>
@@ -869,6 +908,17 @@ function App() {
                                                     "S512"
                                                   ) ? (
                                                     <>
+                                                      <span className="useless">
+                                                        {finalItems.push({
+                                                          name: formData[0][
+                                                            index
+                                                          ],
+                                                          qty: elements[
+                                                            index + 1
+                                                          ],
+                                                          size: item,
+                                                        })}
+                                                      </span>
                                                       <td key={index}>
                                                         {prices.TrackTShirtS512}
                                                       </td>
@@ -910,6 +960,13 @@ function App() {
                                                 "S512"
                                               ) ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.Blazer}
                                                   </td>
@@ -957,6 +1014,13 @@ function App() {
                                                   "O14"
                                                 )) ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.Shorts}
                                                   </td>
@@ -998,6 +1062,13 @@ function App() {
                                                   "O14"
                                                 )) ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.SkirtF14}
                                                   </td>
@@ -1045,6 +1116,13 @@ function App() {
                                                   "O14"
                                                 )) ? (
                                                 <>
+                                                  <span className="useless">
+                                                    {finalItems.push({
+                                                      name: formData[0][index],
+                                                      qty: elements[index + 1],
+                                                      size: item,
+                                                    })}
+                                                  </span>
                                                   <td key={index}>
                                                     {prices.SocksS14}
                                                   </td>
@@ -1077,6 +1155,17 @@ function App() {
                                                     "S512"
                                                   ) ? (
                                                     <>
+                                                      <span className="useless">
+                                                        {finalItems.push({
+                                                          name: formData[0][
+                                                            index
+                                                          ],
+                                                          qty: elements[
+                                                            index + 1
+                                                          ],
+                                                          size: item,
+                                                        })}
+                                                      </span>
                                                       <td key={index}>
                                                         {prices.SocksS512}
                                                       </td>
@@ -1191,7 +1280,7 @@ function App() {
                     TOTAL AMOUNT: {"   "} Rs.
                     {Math.round(subtotal + gst5Total + gst12Total)}
                   </p>
-                  <div className="balances" id="balances">
+                  <div className="balances" id="remBalance">
                     <div className="form_received">
                       <label className="form_item" htmlFor="received_amt">
                         Received Amount
@@ -1225,9 +1314,9 @@ function App() {
 
                   <div className="total_words">
                     <p className="bold">Total Amount (in words)</p>
-                    <p id="words">
-                      {inWords(Math.round(subtotal + gst5Total + gst12Total))}
-                    </p>
+                    <InWords
+                      amount={Math.round(subtotal + gst5Total + gst12Total)}
+                    />
                   </div>
 
                   <div className="sign">
