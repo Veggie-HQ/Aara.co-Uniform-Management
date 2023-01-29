@@ -112,7 +112,7 @@ function App() {
     let doc = new jsPDF();
     doc.html(element, {
       callback: function (doc) {
-        doc.save(`${mobNumber}.pdf`);
+        doc.save(`INVOICE #${INV}.pdf`);
       },
       margin: [10, 0, 0, 20],
       autoPaging: "text",
