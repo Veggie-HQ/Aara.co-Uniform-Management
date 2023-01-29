@@ -121,10 +121,6 @@ function App() {
       width: 175,
       windowWidth: 1000,
     });
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000);
   };
 
   async function PushOrderToDB(order_details) {
