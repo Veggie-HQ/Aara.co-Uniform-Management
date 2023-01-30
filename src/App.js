@@ -5,13 +5,13 @@ import { jsPDF } from "jspdf";
 import Re from "./assets/re.png";
 import Sign from "./assets/sign.jpeg";
 import Header from "./assets/header.png";
+import A2 from "./assets/a2.png";
+import B2 from "./assets/b2.png";
+import LoadingGif from "./assets/loading.gif";
 
 import InvoiceDate from "./utils/InvoiceDate";
 import InWords from "./utils/InWords";
 import prices from "./utils/prices";
-
-import A2 from "./assets/a2.png";
-import B2 from "./assets/b2.png";
 
 function App() {
   useEffect(() => {
@@ -1683,7 +1683,17 @@ function App() {
               Download Invoice
             </button>
           ) : (
-            ""
+            <>
+              {confirmed ? (
+                <div className="loading">
+                  Generating Invoice
+                  <img src={LoadingGif} alt="loading" />
+                </div>
+              ) : (
+                ""
+              )}
+            </>
+            // <p>Generating Invoice</p>
           )}
 
           {!confirmed ? (
@@ -1699,17 +1709,7 @@ function App() {
           ) : (
             ""
           )}
-
-          {/* <button
-            className="button confirm reload"
-            onClick={() => {
-              window.location.reload();
-            }}
-          >
-            Reload Page
-          </button> */}
         </div>
-        <div className="spacer" />
       </body>
       <footer className="footer">
         <p>Built By</p>
