@@ -28,6 +28,7 @@ function App() {
   const [search, setSearch] = useState(false);
   const [INV, SetINV] = useState(0);
   const [download, allowDownload] = useState(false);
+  const [buttonClick, setButtonClick] = useState(false);
 
   async function dataFetcher() {
     const res = await fetch(process.env.REACT_APP_GSHEETS_URL);
@@ -200,6 +201,7 @@ function App() {
       return;
     }
     setSearch(true);
+    setButtonClick(true);
   };
 
   // console.log("IN::", INV);
@@ -1696,7 +1698,7 @@ function App() {
             // <p>Generating Invoice</p>
           )}
 
-          {!confirmed ? (
+          {!confirmed && buttonClick ? (
             <>
               {filteredOrders[selStud] != null ? (
                 <button className="button confirm" onClick={confirmHandler}>
