@@ -133,24 +133,24 @@ function App() {
     });
     const data = await res.json();
     currKey = data["name"];
-    console.log("pushed1");
+    // console.log("pushed1");
 
     const res1 = await fetch(process.env.REACT_APP_FIREBASE_URL);
-    console.log("fetching");
+    // console.log("fetching");
     const data1 = await res1.json().then((res) => {
-      console.log("fetching 2");
+      // console.log("fetching 2");
       let x = Object.keys(res);
       for (let i = 0; i < x.length; i++) {
-        console.log(x[i] + " : " + currKey);
+        // console.log(x[i] + " : " + currKey);
         if (x[i] === currKey) {
-          console.log("curr", currKey);
+          // console.log("curr", currKey);
           currIndex = i;
 
           break;
         }
       }
     });
-    console.log("fetched", currIndex);
+    // console.log("fetched", currIndex);
     IN = 500 + currIndex;
 
     let modDetails = {
@@ -181,11 +181,11 @@ function App() {
       },
     });
     const data2 = await res2.json();
-    console.log("pushed2");
+    // console.log("pushed2");
     SetINV(IN);
   }
 
-  console.log("IN::", INV);
+  // console.log("IN::", INV);
 
   return (
     <>
