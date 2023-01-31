@@ -5,14 +5,14 @@ import toast, { Toaster } from "react-hot-toast";
 
 import Re from "./assets/re.png";
 import Sign from "./assets/sign.jpeg";
-import Header from "./assets/header.png";
-import A2 from "./assets/a2.png";
-import B2 from "./assets/b2.png";
+import InvoiceHeader from "./assets/header.png";
 import LoadingGif from "./assets/loading.gif";
 
 import InvoiceDate from "./utils/InvoiceDate";
 import InWords from "./utils/InWords";
 import prices from "./utils/prices";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 
 const notify = () => {
   toast.success("Order Successfully Placed");
@@ -117,7 +117,7 @@ function App() {
     let element = document.getElementById("contents");
     let b = document.getElementById("remBalance");
     b.style.display = "none";
-    let h = document.getElementById("header");
+    let h = document.getElementById("invoiceheader");
     h.classList.remove("useless");
 
     let doc = new jsPDF();
@@ -218,8 +218,8 @@ function App() {
 
   return (
     <>
-      <Toaster />
-
+      <Toaster position="bottom-center" reverseOrder={false} />
+      {/* <Header /> */}
       <body>
         <div className="form">
           <label className="form_item">Enter Parent's Number</label>
@@ -238,7 +238,7 @@ function App() {
             onClick={searchHandler}
             // onClick={() => setSearch(true)}
           >
-            Click here to search
+            Search Orders
           </button>
         </div>
 
@@ -306,10 +306,10 @@ function App() {
                   {/* Display Order Details */}
                   <div id="contents">
                     <img
-                      src={Header}
-                      alt="header"
-                      className="header useless"
-                      id="header"
+                      src={InvoiceHeader}
+                      alt="invoiceheader"
+                      className="invoiceheader useless"
+                      id="invoiceheader"
                     />
 
                     <div className="billto">
@@ -1725,15 +1725,7 @@ function App() {
           )}
         </div>
       </body>
-      <footer className="footer">
-        <p>Built By</p>
-        <a target="_blank" href="https://www.linkedin.com/in/anusha18/">
-          <img src={A2} alt="Avocado Anusha" className="emoji" />
-        </a>
-        <a target="_blank" href="https://briha.live">
-          <img src={B2} alt="Broccoli Briha" className="emoji" />
-        </a>
-      </footer>
+      <Footer />
     </>
   );
 }
