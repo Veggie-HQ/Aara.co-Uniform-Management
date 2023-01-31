@@ -128,6 +128,7 @@ function App() {
     let element = document.getElementById("contents");
     let b = document.getElementById("remBalance");
     b.style.display = "none";
+
     let h = document.getElementById("invoiceheader");
     h.classList.remove("useless");
 
@@ -144,9 +145,9 @@ function App() {
       windowWidth: 1000,
     });
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 3000);
   };
 
   async function PushOrderToDB(order_details) {
@@ -316,12 +317,10 @@ function App() {
                 <div>
                   {/* Display Order Details */}
                   <div id="contents">
-                    <img
-                      src={InvoiceHeader}
-                      alt="invoiceheader"
-                      className="invoiceheader useless"
-                      id="invoiceheader"
-                    />
+                    <div className="useless invoiceheader" id="invoiceheader">
+                      <p className="tax_invoice">TAX INVOICE</p>
+                      <img src={InvoiceHeader} alt="invoiceheader" />
+                    </div>
 
                     <div className="billto">
                       <div className="left left_bill">
@@ -1681,7 +1680,7 @@ function App() {
                             className="sign_img"
                             alt="Authorised Sign"
                           />
-                          <p className="bold">Authorised Signatory for</p>
+                          <p className="bold">Authorised Signatory For</p>
                           <p id="words">Aara.co</p>
                         </div>
                       </div>
