@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { jsPDF } from "jspdf";
+import toast, { Toaster } from "react-hot-toast";
 
 import Re from "./assets/re.png";
 import Sign from "./assets/sign.jpeg";
@@ -12,6 +13,10 @@ import LoadingGif from "./assets/loading.gif";
 import InvoiceDate from "./utils/InvoiceDate";
 import InWords from "./utils/InWords";
 import prices from "./utils/prices";
+
+const notify = () => {
+  toast.success("Order Successfully Placed");
+};
 
 function App() {
   useEffect(() => {
@@ -104,6 +109,7 @@ function App() {
 
       PushOrderToDB(orderDetails);
       setConfirmed(true);
+      notify();
     }
   };
 
@@ -212,6 +218,8 @@ function App() {
 
   return (
     <>
+      <Toaster />
+
       <body>
         <div className="form">
           <label className="form_item">Enter Parent's Number</label>
