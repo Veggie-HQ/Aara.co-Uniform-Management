@@ -15,7 +15,18 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 
 const notify = () => {
-  toast.success("Order Successfully Placed");
+  toast.success("Order Successfully Placed", {
+    style: {
+      border: "2px #ffa500 solid",
+      background: "rgba(255, 165, 0, 1)",
+      padding: "16px",
+      color: "#000",
+    },
+    iconTheme: {
+      primary: "#713200",
+      secondary: "#FFFAEE",
+    },
+  });
 };
 
 function App() {
