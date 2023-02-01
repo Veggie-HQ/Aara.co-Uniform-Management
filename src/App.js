@@ -178,7 +178,7 @@ function App() {
       }
     });
     // console.log("fetched", currIndex);
-    IN = 500 + currIndex;
+    IN = 127 + currIndex;
 
     let modDetails = {
       parent_number: mobNumber,
