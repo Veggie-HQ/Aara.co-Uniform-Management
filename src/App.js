@@ -151,7 +151,7 @@ function App() {
   };
 
   async function PushOrderToDB(order_details) {
-    const res = await fetch(process.env.REACT_APP_FIREBASE_URL, {
+    const res = await fetch(process.env.REACT_APP_FIREBASE_URL5, {
       method: "POST",
       body: JSON.stringify(order_details),
       headers: {
@@ -162,7 +162,7 @@ function App() {
     currKey = data["name"];
     // console.log("pushed1");
 
-    const res1 = await fetch(process.env.REACT_APP_FIREBASE_URL);
+    const res1 = await fetch(process.env.REACT_APP_FIREBASE_URL5);
     // console.log("fetching");
     const data1 = await res1.json().then((res) => {
       // console.log("fetching 2");
@@ -200,7 +200,7 @@ function App() {
       invoice_number: IN,
     };
 
-    const res2 = await fetch(process.env.REACT_APP_FIREBASE_URL2, {
+    const res2 = await fetch(process.env.REACT_APP_FIREBASE_URL6, {
       method: "POST",
       body: JSON.stringify(modDetails),
       headers: {
